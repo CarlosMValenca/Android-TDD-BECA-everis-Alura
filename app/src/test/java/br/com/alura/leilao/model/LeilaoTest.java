@@ -4,16 +4,18 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.util.List;
+
 public class LeilaoTest {
 
-    private Leilao console = new Leilao("Console");
-    private Usuario alex = new Usuario("Alex");
-    private Usuario fran = new Usuario("Fran");
+    public static final double DELTA = 0.0001;
+    private final Leilao CONSOLE = new Leilao("Console");
+    private final Usuario ALEX = new Usuario("Alex");
 
     @Test
     public void getDescricaoQuandoRecebeDescricaoDevolveDescricao() {
         // executar ação esperada
-        String descrcaoDevolvida = console.getDescricao();
+        String descrcaoDevolvida = CONSOLE.getDescricao();
         // testar resultado esperado
         assertEquals("Console", descrcaoDevolvida);
     }
@@ -23,60 +25,74 @@ public class LeilaoTest {
     @Test
     public void deve_DevolvendoMaiorLance_QuandoRecebeApenasUmLance(){
         // verifica se devolve maior lance com apenas um lance
-        console.propoe(new Lance(alex, 200.00));
+        CONSOLE.propoe(new Lance(ALEX, 200.00));
 
-        double maiorLanceDevolvidoDoConsole = console.getMaiorLance();
+        double maiorLanceDevolvidoDoConsole = CONSOLE.getMaiorLance();
         // O delta pega a diferença entre os valores com ponto flutuante e se ele for maior, significa que os valores são equivalentes.
-        assertEquals(200.00, maiorLanceDevolvidoDoConsole, 0.0001);
+        assertEquals(200.00, maiorLanceDevolvidoDoConsole, DELTA);
     }
 
     @Test
     public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemCrescente(){
         // verifica se devolve maior lance com mais de um lance em ordem crescente
-        console.propoe(new Lance(alex, 100.00));
-        console.propoe(new Lance(fran, 200.00));
+        CONSOLE.propoe(new Lance(ALEX, 100.00));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"), 200.00));
 
-        double maiorLanceDevolvidoDoComputador = console.getMaiorLance();
+        double maiorLanceDevolvidoDoComputador = CONSOLE.getMaiorLance();
 
-        assertEquals(200.00, maiorLanceDevolvidoDoComputador, 0.0001);
+        assertEquals(200.00, maiorLanceDevolvidoDoComputador, DELTA);
     }
 
     @Test
     public void deve_DevolveMaiorLance_LanceQuandoRecebeMaisDeUmLanceEmOrdemDecrescente(){
         // verifica se devolve maior lance com mais de um lance em ordem decrescente
-        console.propoe(new Lance(alex, 10000.00));
-        console.propoe(new Lance(fran, 9000.00));
+        CONSOLE.propoe(new Lance(ALEX, 10000.00));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"), 9000.00));
 
-        double maiorLanceDevolvidoDoCarro = console.getMaiorLance();
+        double maiorLanceDevolvidoDoCarro = CONSOLE.getMaiorLance();
 
-        assertEquals(10000.00, maiorLanceDevolvidoDoCarro, 0.0001);
+        assertEquals(10000.00, maiorLanceDevolvidoDoCarro, DELTA);
     }
 
     @Test
     public void deve_DevolvendoMenorLance_QuandoRecebeApenasUmLance(){
-        console.propoe(new Lance(alex, 200.00));
+        CONSOLE.propoe(new Lance(ALEX, 200.00));
 
-        double menorLanceDevolvido = console.getMenorLance();
-        assertEquals(200.00, menorLanceDevolvido, 0.0001);
+        double menorLanceDevolvido = CONSOLE.getMenorLance();
+        assertEquals(200.00, menorLanceDevolvido, DELTA);
     }
 
     @Test
     public void deve_DevolveMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemCrescente(){
-        console.propoe(new Lance(alex, 100.00));
-        console.propoe(new Lance(fran, 200.00));
+        CONSOLE.propoe(new Lance(ALEX, 100.00));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"), 200.00));
 
-        double menorLanceDevolvidoDoComputador = console.getMenorLance();
+        double menorLanceDevolvidoDoComputador = CONSOLE.getMenorLance();
 
-        assertEquals(100.00, menorLanceDevolvidoDoComputador, 0.0001);
+        assertEquals(100.00, menorLanceDevolvidoDoComputador, DELTA);
     }
 
     @Test
     public void deve_DevolveMenorLance_LanceQuandoRecebeMaisDeUmLanceEmOrdemDecrescente(){
-        console.propoe(new Lance(alex, 10000.00));
-        console.propoe(new Lance(fran, 9000.00));
+        CONSOLE.propoe(new Lance(ALEX, 10000.00));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"), 9000.00));
 
-        double menorLanceDevolvidoDoCarro = console.getMenorLance();
+        double menorLanceDevolvidoDoCarro = CONSOLE.getMenorLance();
 
-        assertEquals(9000.00, menorLanceDevolvidoDoCarro, 0.0001);
+        assertEquals(9000.00, menorLanceDevolvidoDoCarro, DELTA);
+    }
+
+    @Test
+    public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances(){
+        CONSOLE.propoe(new Lance(ALEX, 200.00));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"), 300.00));
+        CONSOLE.propoe(new Lance(ALEX, 400.00));
+
+        List<Lance> tresMaioresLancesDevolvidos =  CONSOLE.tresMaioresLances();
+
+        assertEquals(3, tresMaioresLancesDevolvidos.size());
+        assertEquals(400.00, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        assertEquals(300.00, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+        assertEquals(200.00, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
     }
 }
