@@ -7,7 +7,7 @@ import org.junit.Test;
 public class LeilaoTest {
 
     @Test
-    public void getDescricao() {
+    public void getDescricaoQuandoRecebeDescricaoDevolveDescricao() {
         // criar cenário de teste
         Leilao console =  new Leilao("Console");
         // executar ação esperada
@@ -16,13 +16,41 @@ public class LeilaoTest {
         assertEquals("Console", descrcaoDevolvida);
     }
 
+    // [nome do metodo] + [estado do teste] + [resultado esperado]
     @Test
-    public void getMaiorLance(){
+    public void getMaiorLanceQuandoREcebeApenasUmLanceDevolvendoMaiorLance(){
+        // verifica se devolve maior lance com apenas um lance
         Leilao console = new Leilao("Console");
         console.propoe(new Lance(new Usuario("Alex"), 200.00));
 
-        double maiorLanceDevolvido = console.getMaiorLance();
+        double maiorLanceDevolvidoDoConsole = console.getMaiorLance();
         // O delta pega a diferença entre os valores com ponto flutuante e se ele for maior, significa que os valores são equivalentes.
-        assertEquals(200.00, maiorLanceDevolvido, 0.0001);
+        assertEquals(200.00, maiorLanceDevolvidoDoConsole, 0.0001);
+
+    }
+
+    @Test
+    public void getMaiorLanceQuandoRecebeMaisDeUmLanceEmOrdemCrescenteDevolveMaiorLance(){
+        // verifica se devolve maior lance com mais de um lance em ordem crescente
+        Leilao computador = new Leilao("Computador");
+        computador.propoe(new Lance(new Usuario("Alex"), 100.00));
+        computador.propoe(new Lance(new Usuario("Fran"), 200.00));
+
+        double maiorLanceDevolvidoDoComputador = computador.getMaiorLance();
+
+        assertEquals(200.00, maiorLanceDevolvidoDoComputador, 0.0001);
+
+    }
+
+    @Test
+    public void getMaiorLanceLanceQuandoRecebeMaisDeUmLanceEmOrdemDecrescenteDevolveMaiorLance(){
+        // verifica se devolve maior lance com mais de um lance em ordem decrescente
+        Leilao carro = new Leilao("Carro");
+        carro.propoe(new Lance(new Usuario("Alex"), 10000.00));
+        carro.propoe(new Lance(new Usuario("Fran"), 9000.00));
+
+        double maiorLanceDevolvidoDoCarro = carro.getMaiorLance();
+
+        assertEquals(10000.00, maiorLanceDevolvidoDoCarro, 0.0001);
     }
 }
