@@ -155,7 +155,7 @@ public class LeilaoTest {
     @Test
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
         CONSOLE.propoe(new Lance(ALEX, 500.00));
-        CONSOLE.propoe(new Lance(ALEX, 600.00));
+        CONSOLE.propoe(new Lance(new Usuario("Alex"), 600.00));
 
         int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
 
