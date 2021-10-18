@@ -8,6 +8,10 @@ import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
+import br.com.alura.leilao.exception.LanceMenorQueUltimoLanceException;
+import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
+import br.com.alura.leilao.exception.UsuarioJaDeuCincoLancesException;
+
 public class LeilaoTest {
 
     public static final double DELTA = 0.0001;
@@ -149,8 +153,7 @@ public class LeilaoTest {
 
     @Test
     public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance(){
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Lance foi menor que maior lance");
+        exception.expect(LanceMenorQueUltimoLanceException.class);
         CONSOLE.propoe(new Lance(ALEX, 500.00));
         CONSOLE.propoe(new Lance(FRAN, 400.00));
 
@@ -158,18 +161,15 @@ public class LeilaoTest {
 
     @Test
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
+        exception.expect(LanceSeguidoDoMesmoUsuarioException.class);
         CONSOLE.propoe(new Lance(ALEX, 500.00));
-        try {
-            CONSOLE.propoe(new Lance(ALEX, 600.00));
-            fail("Era esperada uma RuntimeException");
-        } catch(RuntimeException exception){
-            assertEquals("Mesmo usuario do ultimo lance", exception.getMessage());
-        }
+        CONSOLE.propoe(new Lance(ALEX, 600.00));
 
     }
 
     @Test
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances(){
+        exception.expect(UsuarioJaDeuCincoLancesException.class);
         CONSOLE.propoe(new Lance(ALEX, 100.00));
         CONSOLE.propoe(new Lance(FRAN, 200.00));
         CONSOLE.propoe(new Lance(ALEX, 300.00));
@@ -180,15 +180,7 @@ public class LeilaoTest {
         CONSOLE.propoe(new Lance(FRAN, 800.00));
         CONSOLE.propoe(new Lance(ALEX, 900.00));
         CONSOLE.propoe(new Lance(FRAN, 1000.00));
-
-        try {
-            CONSOLE.propoe(new Lance(ALEX, 1100.00));
-            fail("Era esperada uma RuntimeException");
-        } catch (RuntimeException exception){
-            assertEquals("Usuario ja deu cinco lances", exception.getMessage());
-        }
-
-
+        CONSOLE.propoe(new Lance(ALEX, 1100.00));
 
     }
 }
