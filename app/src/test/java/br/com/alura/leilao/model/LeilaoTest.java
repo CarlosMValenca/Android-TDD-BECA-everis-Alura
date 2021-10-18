@@ -2,7 +2,9 @@ package br.com.alura.leilao.model;
 
 import static org.junit.Assert.*;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
@@ -12,6 +14,9 @@ public class LeilaoTest {
     private final Leilao CONSOLE = new Leilao("Console");
     private final Usuario ALEX = new Usuario("Alex");
     private final Usuario FRAN = new Usuario("Fran");
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void getDescricaoQuandoRecebeDescricaoDevolveDescricao() {
@@ -144,13 +149,11 @@ public class LeilaoTest {
 
     @Test
     public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance(){
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Lance foi menor que maior lance");
         CONSOLE.propoe(new Lance(ALEX, 500.00));
-        try{
-            CONSOLE.propoe(new Lance(FRAN, 400.00));
-            fail("Era esperada uma RuntimeException");
-        } catch(RuntimeException exception){
-            assertEquals("Lance foi menor que maior lance", exception.getMessage());
-        }
+        CONSOLE.propoe(new Lance(FRAN, 400.00));
+
     }
 
     @Test
