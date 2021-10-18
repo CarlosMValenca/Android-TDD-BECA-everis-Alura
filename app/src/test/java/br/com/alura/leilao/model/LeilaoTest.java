@@ -11,6 +11,7 @@ public class LeilaoTest {
     public static final double DELTA = 0.0001;
     private final Leilao CONSOLE = new Leilao("Console");
     private final Usuario ALEX = new Usuario("Alex");
+    private final Usuario FRAN = new Usuario("Fran");
 
     @Test
     public void getDescricaoQuandoRecebeDescricaoDevolveDescricao() {
@@ -123,5 +124,19 @@ public class LeilaoTest {
         assertEquals(2, tresMaioresLancesDevolvidos.size());
         assertEquals(400.00, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
         assertEquals(300.00, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+    }
+
+    @Test
+    public void deve_DevolverTresLances_QuandoReceberApenasQuatroLances(){
+        CONSOLE.propoe(new Lance(ALEX, 300.00));
+        CONSOLE.propoe(new Lance(FRAN, 400.00));
+        CONSOLE.propoe(new Lance(ALEX, 500.00));
+        CONSOLE.propoe(new Lance(FRAN, 600.00));
+
+        final List<Lance> tresMaioresLancesDevolvidos = CONSOLE.tresMaioresLances();
+        assertEquals(3, tresMaioresLancesDevolvidos.size());
+        assertEquals(600.00, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        assertEquals(500.00, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+        assertEquals(400.00, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
     }
 }
