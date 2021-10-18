@@ -149,18 +149,20 @@ public class LeilaoTest {
             CONSOLE.propoe(new Lance(FRAN, 400.00));
             fail("Era esperada uma RuntimeException");
         } catch(RuntimeException exception){
-            // teste passou
+            assertEquals("Lance foi menor que maior lance", exception.getMessage());
         }
     }
 
     @Test
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
         CONSOLE.propoe(new Lance(ALEX, 500.00));
-        CONSOLE.propoe(new Lance(ALEX, 600.00));
+        try {
+            CONSOLE.propoe(new Lance(ALEX, 600.00));
+            fail("Era esperada uma RuntimeException");
+        } catch(RuntimeException exception){
+            assertEquals("Mesmo usuario do ultimo lance", exception.getMessage());
+        }
 
-        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
-
-        assertEquals(1, quantidadeLancesDevolvida);
     }
 
     @Test
@@ -175,12 +177,15 @@ public class LeilaoTest {
         CONSOLE.propoe(new Lance(FRAN, 800.00));
         CONSOLE.propoe(new Lance(ALEX, 900.00));
         CONSOLE.propoe(new Lance(FRAN, 1000.00));
-        CONSOLE.propoe(new Lance(ALEX, 1100.00));
-        CONSOLE.propoe(new Lance(FRAN, 1200.00));
 
-        int quantidadeLanceDevolvida = CONSOLE.quantidadeLances();
+        try {
+            CONSOLE.propoe(new Lance(ALEX, 1100.00));
+            fail("Era esperada uma RuntimeException");
+        } catch (RuntimeException exception){
+            assertEquals("Usuario ja deu cinco lances", exception.getMessage());
+        }
 
-        assertEquals(10, quantidadeLanceDevolvida);
+
 
     }
 }
